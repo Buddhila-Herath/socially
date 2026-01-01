@@ -8,11 +8,7 @@ export default function Home() {
       <SignedOut>
         <SignInButton mode="modal" />
         <Button>Sign In</Button>
-        <SignInButton />
       </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
       <ModeToggle />
       <Button variant={"secondary"}>Click me</Button>
     </div>
