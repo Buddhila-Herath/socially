@@ -5,12 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  // url      = env("DATABASE_URL")
 }
 
 model User {
@@ -36,10 +36,6 @@ model User {
 
   notifications        Notification[] @relation("userNotifications")
   notificationsCreated Notification[] @relation("userNotificationsCreator")
-  follows              Follows[]
-  follows              Follows[]
-  notifications        Notification[]
-  notifications        Notification[]
 }
 
 model Post {
@@ -88,34 +84,33 @@ model Follows {
   followingId String
   createdAt   DateTime @default(now())
 
-  follower  User    @relation(fields: [followerId], references: [id], onDelete: Cascade)
-  following User    @relation(fields: [followingId], references: [id], onDelete: Cascade)
-  user      User?   @relation(fields: [userId], references: [id])
-  userId    String?
-  user      User?   @relation(fields: [userId], references: [id])
-  userId    String?
+  follower  User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@id([followerId, followingId]) //composite pk whicj prvent duplicate follows
   @@index([followerId, followingId]) //composite index for faster queries
 }
 
 model Notification {
-  id        String   @id @default(cuid())
+  id        String           @id @default(cuid())
   userId    String
   creatorId String
-  type      String
-  read      Boolean  @default(false)
+  type      NotificationType
+  read      Boolean          @default(false)
   postId    String?
   commentId String?
-  content   String
-  createdAt DateTime @default(now())
+  createdAt DateTime         @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  creator User    @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  user    User     @relation("userNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  creator User     @relation("userNotificationsCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  FOLLOW
 }
