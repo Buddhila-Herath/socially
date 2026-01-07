@@ -1,4 +1,5 @@
 import CreatePost from "@/components/ui/CreatePost";
+import WhoToFollow from "@/components/WhoToFollow";
 
 export default async function Home() {
   return (
@@ -7,8 +8,7 @@ export default async function Home() {
         <CreatePost />
       </div>
       <div className="hidden lg:block lg:col-span-4 sticky top-20">
-        WhoToFollow
-
+        <WhoToFollow />
       </div>
     </div>
   );
