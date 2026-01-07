@@ -1,0 +1,27 @@
+"use server"
+
+import prisma from "@/lib/Prisma";
+import { getDbUserId } from "./user.action";
+import { revalidatePath } from "next/cache";
+
+export async function createPost(content: string, image: string) {
+    try {
+        const userId = await getDbUserId();
+        if (!userId) {
+            return { success: false, error: "User not authenticated" };
+        }
+        const post = await prisma.post.create({
+            data: {
+                content,
+                image,
+                authorId: userId,
+            }
+        })
+
+        revalidatePath("/");
+        return { success: true, post };
+    } catch (error) {
+        console.log("Error creating post", error);
+        return { success: false, error: "Error creating post" };
+    }
+}
