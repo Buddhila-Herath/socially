@@ -65,7 +65,7 @@ export async function POST(req: Request) {
                 }
             })
         } catch (error) {
-            console.log("Error creating user in webhook", error);
+            console.error("Error creating user in webhook", error);
             return new Response('Error creating user', { status: 500 })
         }
     }
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
                 }
             })
         } catch (error) {
-            console.log("Error updating user in webhook", error);
+            console.error("Error updating user in webhook", error);
             return new Response('Error updating user', { status: 500 })
         }
     }

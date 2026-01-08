@@ -21,7 +21,7 @@ export async function createPost(content: string, image: string) {
         revalidatePath("/");
         return { success: true, post };
     } catch (error) {
-        console.log("Error creating post", error);
+        console.error("Error creating post", error);
         return { success: false, error: "Error creating post" };
     }
 }
@@ -35,6 +35,7 @@ export async function getPosts() {
             include: {
                 author: {
                     select: {
+                        id: true,
                         name: true,
                         image: true,
                         username: true,
@@ -70,7 +71,7 @@ export async function getPosts() {
         })
         return posts;
     } catch (error) {
-        console.log("Error fetching posts", error);
+        console.error("Error fetching posts", error);
         throw new Error("Error fetching posts");
     }
 
